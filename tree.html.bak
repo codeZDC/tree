@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<HTML>
+<HEAD>
+	<TITLE> ZTREE DEMO - Custom Icon </TITLE>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" href="zTreeStyle.css" type="text/css">
+	<script type="text/javascript" src="jquery-1.4.4.min.js"></script>
+	<script type="text/javascript" src="jquery.ztree.all.js"></script>
+	<!--  <script type="text/javascript" src="../../../js/jquery.ztree.excheck.js"></script>
+	  <script type="text/javascript" src="../../../js/jquery.ztree.exedit.js"></script>-->
+	<SCRIPT type="text/javascript">
+		//<!--
+	var setting = {
+				view: {
+	                addHoverDom: addHoverDom,
+	                removeHoverDom: removeHoverDom,
+	                selectedMulti: false
+	            },
+				data: {
+					simpleData: {
+						enable: true,
+						idKey: "id",
+						pIdKey: "pId",
+						rootPId: null
+					}
+				},
+				/* check: {
+					autoCheckTrigger: true,
+					enable: true,
+					chkStyle: "checkbox",
+					chkboxType: { "Y": "ps", "N": "ps" }
+				}, */
+				edit: {
+					enable: true,
+					editNameSelectAll: true,
+					showRenameBtn: true,
+					renameTitle: "重命名",
+					showRemoveBtn: true,
+					removeTitle: "删除"
+				},
+				callback: {
+					onRename: zTreeOnRename,
+					onClick : onClick,
+					onNodeCreated: zTreeOnNodeCreated
+				}
+				,check: {
+				enable: true,
+				chkStyle: "checkbox"
+			}
+		};
+		function zTreeOnNodeCreated(event, treeId, treeNode) {
+		    console.log(event);
+		    console.log(treeNode);
+		};
+		function zTreeOnRename(treeId, treeNode,node) {
+			console.log(treeNode);
+			console.log(node.id);
+			console.log(node.name);
+		}
+		function onClick(event,domId,node){
+			if(node.isParent)
+				console.log('父节点');
+			else 
+				console.log('叶子节点');
+		}
+		var zNodes =[
+			{ id:0, name:"我们的爱情", open: true},
+			{ id:1, pId:0, name:"10年以后", open:false},
+			{ id:11, pId:1, name:"你32岁"},
+			{ id:12, pId:1, name:"我35岁"},
+			{ id:13, pId:1, name:"我们的"},
+			{ id:2, pId:0, name:"20年以后", open:false},
+			{ id:21, pId:2, name:"叶子节点21"},
+			{ id:22, pId:2, name:"叶子节点22"},
+			{ id:23, pId:2, name:"叶子节点23"},
+			{ id:3, pId:0, name:"30年以后", open:false},
+			{ id:31, pId:3, name:"叶子节点31"},
+			{ id:32, pId:3, name:"叶子节点32"},
+			{ id:33, pId:3, name:"叶子节点33"}
+		];
+		
+			for(var i in zNodes){
+				zNodes[i].icon ="di.png";
+			}
+	
+	        $(document).ready(function(){
+	            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	        });
+
+	        var newCount = 1;
+	        function addHoverDom(treeId, treeNode) {
+	            var sObj = $("#" + treeNode.tId + "_span");
+	            if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+	            var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+	                + "' title='add node' onfocus='this.blur();'></span>";
+	            sObj.after(addStr);
+	            var btn = $("#addBtn_"+treeNode.tId);
+	            if (btn) btn.bind("click", function(){
+	                var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+	                zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++),icon : "di.png"});
+	                return false;
+	            });
+	        };
+	        function removeHoverDom(treeId, treeNode) {
+	            $("#addBtn_"+treeNode.tId).unbind().remove();
+	        };
+		//-->
+	</SCRIPT>
+</HEAD>
+
+<BODY>
+<div class="content_wrap" style="margin-left: 500px;margin-top: 400px;">
+	<div class="zTreeDemoBackground center">
+		<ul id="treeDemo" class="ztree"></ul>
+	</div>
+</div>
+</BODY>
+</HTML>
